@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.j2emme.dscatalog.dto.CategoryDTO;
 import com.j2emme.dscatalog.entities.Category;
+import com.j2emme.dscatalog.exceptions.EntityNotFoundException;
 import com.j2emme.dscatalog.repositories.CategoryRepository;
-import com.j2emme.dscatalog.services.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -31,6 +31,14 @@ public class CategoryService {
 	public CategoryDTO findaById(Long id) {
 		Optional<Category> obj = repository.findById(id);
 		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity no found"));
+		return new CategoryDTO(entity);
+	}
+	
+	@Transactional
+	public CategoryDTO insert(CategoryDTO dto) {
+		Category entity = new Category();
+		entity.setName(dto.getName());
+		entity = repository.save(entity);
 		return new CategoryDTO(entity);
 	}
 }
