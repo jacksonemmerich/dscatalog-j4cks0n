@@ -28,13 +28,13 @@ public class Product implements Serializable {
 	private String name;
 	@Column(columnDefinition = "TEXT")
 	private String description;
-	private double price;
+	private Double price;
 	private String imgUrl;
 
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant date;
 
-	//o Set não deixa de ter mais de uma categoria
+	//o Set não deixa ter mais de uma categoria duplicada
 	@ManyToMany
 	@JoinTable(name = "tb_product_category",
 			joinColumns = @JoinColumn(name = "product_id"),
@@ -45,7 +45,7 @@ public class Product implements Serializable {
 	public Product() {
 	}
 
-	public Product(Long id, String name, String description, double price, Instant date, String imgUrl) {
+	public Product(Long id, String name, String description, Double price, Instant date, String imgUrl) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -78,11 +78,13 @@ public class Product implements Serializable {
 		this.description = description;
 	}
 
-	public double getPrice() {
+	
+
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
