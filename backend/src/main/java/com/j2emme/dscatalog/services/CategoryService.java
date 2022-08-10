@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.j2emme.dscatalog.dto.CategoryDTO;
 import com.j2emme.dscatalog.entities.Category;
-import com.j2emme.dscatalog.exceptions.ResourceNotFoundException;
 import com.j2emme.dscatalog.repositories.CategoryRepository;
 import com.j2emme.dscatalog.services.exceptions.DatabaseException;
+import com.j2emme.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class CategoryService {

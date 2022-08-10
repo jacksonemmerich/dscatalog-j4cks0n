@@ -14,10 +14,10 @@ import com.j2emme.dscatalog.dto.CategoryDTO;
 import com.j2emme.dscatalog.dto.ProductDTO;
 import com.j2emme.dscatalog.entities.Category;
 import com.j2emme.dscatalog.entities.Product;
-import com.j2emme.dscatalog.exceptions.ResourceNotFoundException;
 import com.j2emme.dscatalog.repositories.CategoryRepository;
 import com.j2emme.dscatalog.repositories.ProductRepository;
 import com.j2emme.dscatalog.services.exceptions.DatabaseException;
+import com.j2emme.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ProductService {
