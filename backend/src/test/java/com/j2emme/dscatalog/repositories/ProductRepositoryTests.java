@@ -29,23 +29,7 @@ public class ProductRepositoryTests {
 		countTotalProducts = 25L;
 	}
 	
-	@Test
-	public void findByIdReturnOptionalNotNullWhenIdExists() {
-		repository.findById(exintingId);
-		
-		Optional<Product> result = repository.findById(exintingId);
-		
-		Assertions.assertTrue(result.isPresent());
-	}
 	
-	@Test
-	public void findByIdReturnOptionalEmptyWhenIdNotExists( ) {
-		repository.findById(nonExistingId);
-		
-		Optional<Product> result = repository.findById(nonExistingId);
-		
-		Assertions.assertTrue(result.isEmpty());
-	}
 	
 	
 	
@@ -77,5 +61,23 @@ public class ProductRepositoryTests {
 		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
 			repository.deleteById(nonExistingId);
 		});
+	}
+	
+	@Test
+	public void findByIdShouldReturnOptionalNonEmptyWhenIdExists() {
+		//repository.findById(exintingId);
+		
+		Optional<Product> result = repository.findById(exintingId);
+		
+		Assertions.assertTrue(result.isPresent());
+	}
+	
+	@Test
+	public void findByIdShouldReturnOptionalEmptyWhenIdNotExists( ) {
+		repository.findById(nonExistingId);
+		
+		Optional<Product> result = repository.findById(nonExistingId);
+		
+		Assertions.assertTrue(result.isEmpty());
 	}
 }
