@@ -9,15 +9,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.j2emme.dscatalog.dto.CategoryDTO;
-import com.j2emme.dscatalog.dto.ProductDTO;
-import com.j2emme.dscatalog.entities.Category;
-import com.j2emme.dscatalog.entities.Product;
-import com.j2emme.dscatalog.repositories.CategoryRepository;
-import com.j2emme.dscatalog.repositories.ProductRepository;
+import com.j2emme.dscatalog.dto.RoleDTO;
+import com.j2emme.dscatalog.dto.UserDTO;
+import com.j2emme.dscatalog.dto.UserInsertDTO;
+import com.j2emme.dscatalog.entities.Role;
+import com.j2emme.dscatalog.entities.User;
+import com.j2emme.dscatalog.repositories.RoleRepository;
+import com.j2emme.dscatalog.repositories.UserRepository;
 import com.j2emme.dscatalog.services.exceptions.DatabaseException;
 import com.j2emme.dscatalog.services.exceptions.ResourceNotFoundException;
 
@@ -25,39 +27,43 @@ import com.j2emme.dscatalog.services.exceptions.ResourceNotFoundException;
 public class UserService {
 
 	@Autowired
-	private ProductRepository repository;
+	private UserRepository repository;
 
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private RoleRepository roleRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(Pageable pageable) {
-		Page<Product> list = repository.findAll(pageable);
-		return list.map(x -> new ProductDTO(x));
+	public Page<UserDTO> findAllPaged(Pageable pageable) {
+		Page<User> list = repository.findAll(pageable);
+		return list.map(x -> new UserDTO(x));
 	}
 
 	@Transactional(readOnly = true)
-	public ProductDTO findaById(Long id) {
-		Optional<Product> obj = repository.findById(id);
-		Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity no found"));
-		return new ProductDTO(entity, entity.getCategories());
+	public UserDTO findaById(Long id) {
+		Optional<User> obj = repository.findById(id);
+		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity no found"));
+		return new UserDTO(entity);
 	}
 
 	@Transactional
-	public ProductDTO insert(ProductDTO dto) {
-		Product entity = new Product();
+	public UserDTO insert(UserInsertDTO dto) {
+		User entity = new User();
 		copyDtoToEntity(dto, entity);
+		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		entity = repository.save(entity);
-		return new ProductDTO(entity);
+		return new UserDTO(entity);
 	}
 
 	@Transactional
-	public ProductDTO update(Long id, ProductDTO dto) {
+	public UserDTO update(Long id, UserDTO dto) {
 		try {
-			Product entity = repository.getReferenceById(id);
+			User entity = repository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
-			return new ProductDTO(entity);
+			return new UserDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
 		}
@@ -74,18 +80,16 @@ public class UserService {
 		}
 	}
 
-	private void copyDtoToEntity(ProductDTO dto, Product entity) {
-		entity.setName(dto.getName());
-		entity.setDescription(dto.getDescription());
-		entity.setDate(dto.getDate());
-		entity.setImgUrl(dto.getImgUrl());
-		entity.setPrice(dto.getPrice());
+	private void copyDtoToEntity(UserDTO dto, User entity) {
+		entity.setFirstName(dto.getFirstName());
+		entity.setLastName(dto.getLastName());
+		entity.setEmail(dto.getEmail());
 
-		entity.getCategories().clear();
-		for (CategoryDTO catDto : dto.getCategories()) {
+		entity.getRoles().clear();
+		for (RoleDTO roleDto : dto.getRoles()) {
 
-			Category category = categoryRepository.getReferenceById(catDto.getId());
-			entity.getCategories().add(category);
+			Role role = roleRepository.getReferenceById(roleDto.getId());
+			entity.getRoles().add(role);
 		}
 
 	}
