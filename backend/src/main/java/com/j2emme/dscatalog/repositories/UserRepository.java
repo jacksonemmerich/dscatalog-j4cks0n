@@ -9,5 +9,6 @@ import com.j2emme.dscatalog.entities.User;
 //camada de acesso a dados
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
+	
+	User findByEmail(String email);
 }

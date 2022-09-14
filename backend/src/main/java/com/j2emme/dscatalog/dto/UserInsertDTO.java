@@ -1,5 +1,8 @@
 package com.j2emme.dscatalog.dto;
 
+import com.j2emme.dscatalog.services.validation.UserInsertValid;
+
+@UserInsertValid
 public class UserInsertDTO extends UserDTO {
 
 	private static final long serialVersionUID = 1L;
