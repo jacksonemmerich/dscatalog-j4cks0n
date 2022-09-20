@@ -71,8 +71,8 @@ public class AuthorizationServerConfig  extends AuthorizationServerConfigurerAda
 		
 		endpoints.authenticationManager(authenticationManager)
 		.tokenStore(tokenStore)
-		.accessTokenConverter(accessTokenConverter)
-		.tokenEnhancer(chain);
+		.accessTokenConverter(accessTokenConverter);
+		//.tokenEnhancer(chain);
 	}
 	
 }
